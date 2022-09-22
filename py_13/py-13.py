@@ -66,6 +66,7 @@ print(f'memory_total is {mypc.memory_total}')
 print(f'memory_used is {mypc.memory_used}')
 print(f'memory_percent is {mypc.memory_percent}')
 
+# тест для memory_used > memory_total и memory_percent строка
 mypc2 = PC_memory(pc_id = os.environ['COMPUTERNAME'], user_name = os.getlogin(), memory_total = 100, memory_used = 200, memory_percent = "str")
 print(f'memory_total is {mypc2.memory_total}')
 print(f'memory_used is {mypc2.memory_used}')
