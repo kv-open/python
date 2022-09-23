@@ -5,7 +5,7 @@ from my_exception import *
 
 class PC_memory:
     """Описание Памяти PC"""
-    def __init__(self, pc_id, user_name, memory_total, memory_used, memory_percent = (psutil.virtual_memory().used * 100) / psutil.virtual_memory().total):
+    def __init__(self, pc_id, user_name, memory_total, memory_used, memory_percent = 'default_value'):
         self.memory_total_default = 100000000000 # 100Gb
         self.memory_used_default = 0
 
@@ -40,18 +40,22 @@ class PC_memory:
             print(f'Wrong value: "{memory_used}" memory_used can not be greather than memory_total or less than 0, default value {self.memory_used_default} will be used')
             self.memory_used = self.memory_used_default
         
-        self.memory_percent = memory_percent
+        try:
+            self.memory_percent = memory_percent
+        except TypeError:
+            print(f'missing 1 required positional argument: memory_percent. value will be calculated automatically')
+            self.memory_percent = self.memory_used * 100 / self.memory_total
         try:
             if type(self.memory_percent) is not float:
                 try:
                     self.memory_percent = float(self.memory_percent)
                 except ValueError:
-                    print(f'wrong percent value, value calculated automatically')
+                    print(f'wrong percent value, value will be calculated automatically')
                     self.memory_percent = self.memory_used * 100 / self.memory_total
             if self.memory_percent < 0 or self.memory_percent > 100:
                 raise PercentError("Percent value must be between 0 and 100")
         except TypeError:
-            print(f'wrong percent value, value calculated automatically')
+            print(f'wrong percent value, value will be calculated automatically')
             self.memory_percent = self.memory_used * 100 / self.memory_total
 
     def show_used_percent(self):
@@ -72,7 +76,7 @@ print(f'memory_percent is {mypc.memory_percent}')
 print("==================================================")
 
 # тест для memory_used > memory_total и memory_percent строка
-mypc2 = PC_memory(pc_id = os.environ['COMPUTERNAME'], user_name = os.getlogin(), memory_total = 100, memory_used = "200", memory_percent = "str")
+mypc2 = PC_memory(pc_id = os.environ['COMPUTERNAME'], user_name = os.getlogin(), memory_total = 100, memory_used = "200")
 print(f'memory_total is {mypc2.memory_total}')
 print(f'memory_used is {mypc2.memory_used}')
 print(f'memory_percent is {mypc2.memory_percent}')
